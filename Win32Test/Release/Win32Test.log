@@ -1,0 +1,9 @@
+﻿  Win32Test.cpp
+Win32Test.cpp(200): warning C4800: “HFONT”: 将值强制为布尔值“true”或“false”(性能警告)
+  正在生成代码
+  2 of 5 functions (40.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+  Win32Test.vcxproj -> C:\Users\jszht\Desktop\Win32GDI\Win32Test\Release\Win32Test.exe
+  Win32Test.vcxproj -> C:\Users\jszht\Desktop\Win32GDI\Win32Test\Release\Win32Test.pdb (Full PDB)

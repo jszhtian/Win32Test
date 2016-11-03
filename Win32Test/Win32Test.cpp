@@ -6,10 +6,14 @@
 
 #define MAX_LOADSTRING 100
 
+
 // 全局变量: 
 HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
+LPCTSTR dtext=L"Test";							// 输出的文本
+LOGFONT lf;
+
 
 // 此代码模块中包含的函数的前向声明: 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -40,8 +44,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WIN32TEST));
 
-    MSG msg;
+	
 
+    MSG msg;
+	
     // 主消息循环: 
     while (GetMessage(&msg, nullptr, 0, 0))
     {
@@ -51,6 +57,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
+
 
     return (int) msg.wParam;
 }
@@ -123,11 +130,24 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
+	HDC hdc;
+	switch (message)
     {
+	case WM_CREATE:
+		{
+		hdc = GetDC(hWnd);
+		lf.lfCharSet = 0x86;
+		lf.lfHeight = 60;
+		const wchar_t *tmp = L"宋体";
+		wcscpy(lf.lfFaceName, tmp);
+		
+		}
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
+			char title1[] = "Windows title1 Set";
+			char title2[] = "Windows title2 Set";
+
             // 分析菜单选择: 
             switch (wmId)
             {
@@ -138,15 +158,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 DestroyWindow(hWnd);
                 break;
 			case IDM_DrawText1:
+				RECT darea;
+				GetClientRect(hWnd, &darea);
+				wcscpy(lf.lfFaceName, L"微软雅黑");
+				dtext = L"Draw Text1: 目前是雅黑输出！";
+				MessageBox(0, lf.lfFaceName, L"目标Font!", 0);
+				InvalidateRect(hWnd, &darea, 1);
+				UpdateWindow(hWnd);
 				break;
 			case IDM_DrawText2:
+				GetClientRect(hWnd, &darea);
+				dtext = L"Draw Text2: 目前是隶书输出！";
+				wcscpy(lf.lfFaceName, L"隶书");
+				MessageBox(0, lf.lfFaceName, L"目标Font!", 0);
+				InvalidateRect(hWnd,&darea,1);
+				UpdateWindow(hWnd);
 				break;
 			case IDM_SetWinTex1:
-				SetWindowTextA(hWnd, "Window Text Set!");
+				SetWindowTextA(hWnd,title1);
+				
 				break;
 			case IDM_SetWinTex2:
 				MessageBoxA(hWnd, "Text Change!","Info!",0);
-				SetWindowTextA(hWnd, "Window Test Set2!");
+				SetWindowTextA(hWnd, title2);
+				
 				break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
@@ -156,8 +191,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
+			
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 在此处添加使用 hdc 的任何绘图代码...
+			//TextOut(hdc, 50, 50,dtext, wcslen(dtext));
+
+			HFONT flag1 = CreateFontIndirect(&lf);
+			if ((bool)flag1)
+			{
+				MessageBoxA(0, "CreateFontindirect Success", "Warning", 0);
+			}
+			else
+			{
+				MessageBoxA(0, "CreateFontIndirect Fail", "Waring", 0);
+			}
+			SelectObject(hdc, flag1);
+			RECT rect;
+			GetClientRect(hWnd, &rect);
+			SelectObject(hdc, &flag1);
+			DrawText(hdc, dtext, -1, &rect, DT_EDITCONTROL);
+			DeleteObject(flag1);
+			MessageBox(0, lf.lfFaceName, L"Info! 实际字体", 0);
+			
+
+
+
             EndPaint(hWnd, &ps);
         }
         break;

@@ -1,3 +1,4 @@
 ﻿  Win32Test.cpp
+c:\users\jszht\desktop\win32gdi\win32test\win32test\win32test.cpp(200): warning C4800: “HFONT”: 将值强制为布尔值“true”或“false”(性能警告)
   Win32Test.vcxproj -> C:\Users\jszht\Desktop\Win32GDI\Win32Test\Debug\Win32Test.exe
   Win32Test.vcxproj -> C:\Users\jszht\Desktop\Win32GDI\Win32Test\Debug\Win32Test.pdb (Full PDB)
